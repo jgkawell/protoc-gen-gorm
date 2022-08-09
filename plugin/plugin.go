@@ -8,9 +8,9 @@ import (
 	"strconv"
 	"strings"
 
+	gorm "github.com/circadence-official/protoc-gen-gorm/options"
 	jgorm "github.com/jinzhu/gorm"
 	"github.com/jinzhu/inflection"
-	gorm "github.com/circadence-official/protoc-gen-gorm/options"
 	"google.golang.org/protobuf/compiler/protogen"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
@@ -935,6 +935,8 @@ func (b *ORMBuilder) parseBasicFields(msg *protogen.Message, g *protogen.Generat
 			fieldType = "float32"
 		case "double":
 			fieldType = "float64"
+		case "bytes":
+			fieldType = "[]byte"
 		}
 
 		f := &Field{
