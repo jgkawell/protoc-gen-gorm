@@ -73,7 +73,6 @@ var builtinTypes = map[string]struct{}{
 	"float64": {},
 	"string":  {},
 	"[]byte":  {},
-	"bytes":  {},
 }
 
 var wellKnownTypes = map[string]string{
@@ -904,7 +903,7 @@ func (b *ORMBuilder) parseBasicFields(msg *protogen.Message, g *protogen.Generat
 					fieldType = "*string"
 				case "smallint", "integer", "bigint", "numeric", "smallserial", "serial", "bigserial":
 					fieldType = "*int64"
-				case "jsonb", "bytea", "bytes":
+				case "jsonb", "bytea":
 					fieldType = "[]byte"
 				case "":
 					fieldType = "interface{}" // we do not know the type yet (if it association we will fix the type later)
