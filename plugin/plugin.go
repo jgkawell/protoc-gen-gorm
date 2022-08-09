@@ -84,7 +84,7 @@ var wellKnownTypes = map[string]string{
 	"UInt32Value": "*uint32",
 	"UInt64Value": "*uint64",
 	"BoolValue":   "*bool",
-	// "BytesValue" : "*[]byte",
+	"bytes":       "[]byte",
 }
 
 const (
@@ -989,9 +989,6 @@ func (b *ORMBuilder) addIncludedField(ormable *OrmableType, field *gorm.ExtraFie
 		// Handle types without a package defined
 		if _, ok := builtinTypes[rawType]; ok {
 			// basic type, 100% okay, no imports or changes needed
-			if rawType == "bytes" {
-				rawType = "[]byte"
-			}
 		} else if rawType == "Time" {
 			// b.UsingGoImports(stdTimeImport) // TODO: missing UsingGoImports
 			rawType = generateImport("Time", stdTimeImport, g)
