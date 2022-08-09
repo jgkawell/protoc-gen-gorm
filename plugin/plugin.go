@@ -84,7 +84,7 @@ var wellKnownTypes = map[string]string{
 	"UInt32Value": "*uint32",
 	"UInt64Value": "*uint64",
 	"BoolValue":   "*bool",
-	"BytesValue" : "*[]byte",
+	// "BytesValue" : "*[]byte",
 }
 
 const (
@@ -903,7 +903,7 @@ func (b *ORMBuilder) parseBasicFields(msg *protogen.Message, g *protogen.Generat
 					fieldType = "*string"
 				case "smallint", "integer", "bigint", "numeric", "smallserial", "serial", "bigserial":
 					fieldType = "*int64"
-				case "jsonb", "bytea":
+				case "jsonb", "bytea", "bytes":
 					fieldType = "[]byte"
 				case "":
 					fieldType = "interface{}" // we do not know the type yet (if it association we will fix the type later)
