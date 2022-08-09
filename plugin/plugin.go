@@ -8,9 +8,9 @@ import (
 	"strconv"
 	"strings"
 
+	gorm "github.com/circadence-official/protoc-gen-gorm/options"
 	jgorm "github.com/jinzhu/gorm"
 	"github.com/jinzhu/inflection"
-	gorm "github.com/circadence-official/protoc-gen-gorm/options"
 	"google.golang.org/protobuf/compiler/protogen"
 	"google.golang.org/protobuf/proto"
 	"google.golang.org/protobuf/reflect/protoreflect"
@@ -84,7 +84,7 @@ var wellKnownTypes = map[string]string{
 	"UInt32Value": "*uint32",
 	"UInt64Value": "*uint64",
 	"BoolValue":   "*bool",
-	//  "BytesValue" : "*[]byte",
+	"BytesValue" : "*[]byte",
 }
 
 const (
