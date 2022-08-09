@@ -903,7 +903,7 @@ func (b *ORMBuilder) parseBasicFields(msg *protogen.Message, g *protogen.Generat
 					fieldType = "*string"
 				case "smallint", "integer", "bigint", "numeric", "smallserial", "serial", "bigserial":
 					fieldType = "*int64"
-				case "jsonb", "bytea", "bytes":
+				case "jsonb", "bytea":
 					fieldType = "[]byte"
 				case "":
 					fieldType = "interface{}" // we do not know the type yet (if it association we will fix the type later)
@@ -989,6 +989,9 @@ func (b *ORMBuilder) addIncludedField(ormable *OrmableType, field *gorm.ExtraFie
 		// Handle types without a package defined
 		if _, ok := builtinTypes[rawType]; ok {
 			// basic type, 100% okay, no imports or changes needed
+			if rawType == "bytes" {
+				rawType = "[]byte"
+			}
 		} else if rawType == "Time" {
 			// b.UsingGoImports(stdTimeImport) // TODO: missing UsingGoImports
 			rawType = generateImport("Time", stdTimeImport, g)
