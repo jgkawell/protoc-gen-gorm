@@ -84,7 +84,7 @@ var wellKnownTypes = map[string]string{
 	"UInt32Value": "*uint32",
 	"UInt64Value": "*uint64",
 	"BoolValue":   "*bool",
-	// "BytesValue" : "*[]byte",
+	//  "BytesValue" : "*[]byte",
 }
 
 const (
