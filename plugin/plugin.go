@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"strings"
 
-	gorm "github.com/infobloxopen/protoc-gen-gorm/options"
+	gorm "github.com/jgkawell/protoc-gen-gorm/options"
 	jgorm "github.com/jinzhu/gorm"
 	"github.com/jinzhu/inflection"
 	"google.golang.org/protobuf/compiler/protogen"
@@ -38,13 +38,13 @@ var (
 	uuidImport         = "github.com/satori/go.uuid"
 	authImport         = "github.com/infobloxopen/atlas-app-toolkit/auth"
 	gormpqImport       = "github.com/jinzhu/gorm/dialects/postgres"
-	gtypesImport       = "github.com/infobloxopen/protoc-gen-gorm/types"
+	gtypesImport       = "github.com/jgkawell/protoc-gen-gorm/types"
 	resourceImport     = "github.com/infobloxopen/atlas-app-toolkit/gorm/resource"
 	queryImport        = "github.com/infobloxopen/atlas-app-toolkit/query"
 	ocTraceImport      = "go.opencensus.io/trace"
 	gatewayImport      = "github.com/infobloxopen/atlas-app-toolkit/gateway"
 	pqImport           = "github.com/lib/pq"
-	gerrorsImport      = "github.com/infobloxopen/protoc-gen-gorm/errors"
+	gerrorsImport      = "github.com/jgkawell/protoc-gen-gorm/errors"
 	timestampImport    = "google.golang.org/protobuf/types/known/timestamppb"
 	durationImport     = "google.golang.org/protobuf/types/known/durationpb"
 	wktImport          = "google.golang.org/protobuf/types/known/wrapperspb"
@@ -1178,9 +1178,9 @@ func (b *ORMBuilder) renderGormTag(field *Field) string {
 	}
 	if len(tag.UniqueIndex) > 0 {
 		if tag.GetUniqueIndex() == "" {
-			gormRes += "unique_index;"
+			gormRes += "uniqueIndex;"
 		} else {
-			gormRes += fmt.Sprintf("unique_index:%s;", tag.GetUniqueIndex())
+			gormRes += fmt.Sprintf("uniqueIndex:%s;", tag.GetUniqueIndex())
 		}
 	}
 	if tag.GetEmbedded() {
