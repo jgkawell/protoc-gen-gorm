@@ -1178,9 +1178,9 @@ func (b *ORMBuilder) renderGormTag(field *Field) string {
 	}
 	if len(tag.UniqueIndex) > 0 {
 		if tag.GetUniqueIndex() == "" {
-			gormRes += "unique_index;"
+			gormRes += "uniqueIndex;"
 		} else {
-			gormRes += fmt.Sprintf("unique_index:%s;", tag.GetUniqueIndex())
+			gormRes += fmt.Sprintf("uniqueIndex:%s;", tag.GetUniqueIndex())
 		}
 	}
 	if tag.GetEmbedded() {
