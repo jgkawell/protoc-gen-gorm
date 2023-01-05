@@ -8,7 +8,7 @@ import (
 	gorm1 "github.com/infobloxopen/atlas-app-toolkit/gorm"
 	query "github.com/infobloxopen/atlas-app-toolkit/query"
 	gorm "github.com/jinzhu/gorm"
-	errors "github.com/circadence-official/protoc-gen-gorm/errors"
+	errors "github.com/infobloxopen/protoc-gen-gorm/errors"
 	trace "go.opencensus.io/trace"
 	field_mask "google.golang.org/genproto/protobuf/field_mask"
 	emptypb "google.golang.org/protobuf/types/known/emptypb"

@@ -6,7 +6,7 @@ import (
 	gateway "github.com/infobloxopen/atlas-app-toolkit/gateway"
 	gorm1 "github.com/infobloxopen/atlas-app-toolkit/gorm"
 	gorm "github.com/jinzhu/gorm"
-	errors "github.com/circadence-official/protoc-gen-gorm/errors"
+	errors "github.com/infobloxopen/protoc-gen-gorm/errors"
 	go_uuid "github.com/satori/go.uuid"
 	field_mask "google.golang.org/genproto/protobuf/field_mask"
 )
