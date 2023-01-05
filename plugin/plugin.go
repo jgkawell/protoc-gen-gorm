@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"strings"
 
-	gorm "github.com/infobloxopen/protoc-gen-gorm/options"
+	gorm "github.com/circadence-official/protoc-gen-gorm/options"
 	jgorm "github.com/jinzhu/gorm"
 	"github.com/jinzhu/inflection"
 	"google.golang.org/protobuf/compiler/protogen"
@@ -38,13 +38,13 @@ var (
 	uuidImport         = "github.com/satori/go.uuid"
 	authImport         = "github.com/infobloxopen/atlas-app-toolkit/auth"
 	gormpqImport       = "github.com/jinzhu/gorm/dialects/postgres"
-	gtypesImport       = "github.com/infobloxopen/protoc-gen-gorm/types"
+	gtypesImport       = "github.com/circadence-official/protoc-gen-gorm/types"
 	resourceImport     = "github.com/infobloxopen/atlas-app-toolkit/gorm/resource"
 	queryImport        = "github.com/infobloxopen/atlas-app-toolkit/query"
 	ocTraceImport      = "go.opencensus.io/trace"
 	gatewayImport      = "github.com/infobloxopen/atlas-app-toolkit/gateway"
 	pqImport           = "github.com/lib/pq"
-	gerrorsImport      = "github.com/infobloxopen/protoc-gen-gorm/errors"
+	gerrorsImport      = "github.com/circadence-official/protoc-gen-gorm/errors"
 	timestampImport    = "google.golang.org/protobuf/types/known/timestamppb"
 	durationImport     = "google.golang.org/protobuf/types/known/durationpb"
 	wktImport          = "google.golang.org/protobuf/types/known/wrapperspb"
@@ -107,16 +107,17 @@ const (
 )
 
 type ORMBuilder struct {
-	plugin          *protogen.Plugin
-	ormableTypes    map[string]*OrmableType
-	messages        map[string]struct{}
-	currentFile     string
-	currentPackage  string
-	ormableServices []autogenService
-	dbEngine        int
-	stringEnums     bool
-	gateway         bool
-	suppressWarn    bool
+	plugin            *protogen.Plugin
+	ormableTypes      map[string]*OrmableType
+	messages          map[string]struct{}
+	currentFile       string
+	currentPackage    string
+	ormableServices   []autogenService
+	dbEngine          int
+	stringEnums       bool
+	gateway           bool
+	suppressWarn      bool
+	useDefaultMethods bool
 }
 
 func New(opts protogen.Options, request *pluginpb.CodeGeneratorRequest) (*ORMBuilder, error) {
@@ -149,6 +150,10 @@ func New(opts protogen.Options, request *pluginpb.CodeGeneratorRequest) (*ORMBui
 
 	if _, ok := params["quiet"]; ok {
 		builder.suppressWarn = true
+	}
+
+	if _, ok := params["useDefaultMethods"]; ok {
+		builder.useDefaultMethods = true
 	}
 
 	return builder, nil
@@ -329,7 +334,9 @@ func (b *ORMBuilder) Generate() (*pluginpb.CodeGeneratorResponse, error) {
 			}
 		}
 
-		b.generateDefaultHandlers(protoFile, g)
+		if b.useDefaultMethods {
+			b.generateDefaultHandlers(protoFile, g)
+		}
 		b.generateDefaultServer(protoFile, g)
 	}
 
@@ -933,6 +940,8 @@ func (b *ORMBuilder) parseBasicFields(msg *protogen.Message, g *protogen.Generat
 			fieldType = "float32"
 		case "double":
 			fieldType = "float64"
+		case "bytes":
+			fieldType = "[]byte"
 		}
 
 		f := &Field{
@@ -1144,6 +1153,9 @@ func (b *ORMBuilder) renderGormTag(field *Field) string {
 	}
 	if tag.GetPrimaryKey() {
 		gormRes += "primary_key;"
+	}
+	if len(tag.Constraint) > 0 {
+		gormRes += fmt.Sprintf("constraint:%s;", tag.GetConstraint())
 	}
 	if tag.GetUnique() {
 		gormRes += "unique;"
@@ -2826,8 +2838,12 @@ func (b *ORMBuilder) followsUpdateConventions(inType *protogen.Message, outType 
 				typeOrmable = true
 			}
 		}
-
-		// Check that type of field is a FieldMask
+		if field == nil || field.Desc == nil || field.Desc.Message() == nil {
+			return false, "", ""
+		}
+		if field.Desc.Message().FullName() == "" {
+			return false, "", ""
+		}
 		if string(field.Desc.Message().FullName()) == "google.protobuf.FieldMask" {
 			// More than one mask in request is not allowed.
 			if updateMask != "" {
